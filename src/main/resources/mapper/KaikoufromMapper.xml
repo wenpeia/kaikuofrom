@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kaikuomingt.kaikuofrom.mapper.KaikoufromMapper" >
+
+    <insert id="addfrom" parameterType="com.kaikuomingt.kaikuofrom.domain.Kaikoufrom">
+        INSERT INTO `kaikuotest`.`kaikoufrom`(`name`, `kaikuoelection`, `typefrom`, `typeinput`) VALUES (#{name},#{kaikuoelection}, #{typefrom}, #{typeinput})
+    </insert>
+    <select id="list" parameterType="arraylist" resultType="com.kaikuomingt.kaikuofrom.domain.Kaikoufrom">
+        SELECT * FROM `kaikuotest`.`kaikoufrom` LIMIT 0,1000
+    </select>
+</mapper>

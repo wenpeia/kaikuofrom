@@ -1,0 +1,73 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>表单页面</title>
+</head>
+<body>
+<h1>表单页面</h1>
+<!--/*@thymesVar id="listKaikoufrom" type=""*/-->
+   <form id="biaodanfrom" >
+        <div th:each = "Kaikoufrom : ${listKaikoufrom}">
+            <label th:text="${Kaikoufrom.name}"/>&nbsp&nbsp&nbsp
+            <input th:if="${Kaikoufrom.kaikuoelection} eq '必填'" name="id" th:id="${Kaikoufrom.typefrom}"  th:type="${Kaikoufrom.typeinput}" value="" onblur="validata(value, id)" required/>
+            <label th:if="${Kaikoufrom.kaikuoelection} eq '必填'" >必填</label>
+            <input th:if="${Kaikoufrom.kaikuoelection} ne '必填'" name="id" th:id="${Kaikoufrom.typefrom}" th:type="${Kaikoufrom.typeinput}" />
+            <label th:if="${Kaikoufrom.kaikuoelection} ne '必填'" >可选填</label>
+        </div>
+        <input type="button" value="提交">
+    </form>
+</body>
+<script>
+    var sub = true;//定义一个状态，根据状态来判断是否正确，是否提交
+    var obj=document.getElementsByName("id");
+    var arrid=[];
+    window.onload=function () {
+
+        for (var i=0;i<obj.length;i++){
+            arrid.push(obj[i].id)
+        }
+
+    }
+    function validata(v, id) {//传入俩个参数一个是当前input的value，另一个是当前input的id，这个函数最终返回的是一个布尔值
+
+        if (v == "") {//判断value是否为空
+            $("#" + id).next().css('display', 'block');
+            sub = false;//为空的话
+        } else {
+            sub = true;
+            if (id == '手机号') {//如果传入的id是手机的id 判断手机号码的格式是否正确
+                var myreg = /^1[3456789]\d{9}$/;
+                if (!myreg.exec(v)) {
+                    alert("手机号码有误，请重填")
+                    sub = false;
+                } else {
+                    alert("手机号输入正确")
+                    sub = true;
+                }
+            } else if (id == '邮箱') {//如果传入的id是邮箱的id 判断邮箱号码的格式是否正确
+                var reg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/;
+                if (!reg.test(v)) {
+                    alert("邮箱输入错误")
+                    sub = false;
+                } else {
+                    alert("邮箱输入正确")
+                    sub = true;
+                }
+            }else if (id=='身份证'){
+                var sfz= /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/
+                if (!sfz.test(v)) {
+                    alert("身份证输入错误")
+                    sub = false;
+                } else {
+                    alert("身份证输入正确")
+                    sub = true;
+                }
+            }
+        }
+
+    }
+</script>
+</html>

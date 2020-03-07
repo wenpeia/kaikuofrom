@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kaikuomingt.kaikuofrom.mapper.KaikuotypeMapper" >
+    
+    <resultMap id="Kaikuotype" type="com.kaikuomingt.kaikuofrom.domain.Kaikuotype">
+        <id property="id" column="id"></id>
+        <result property="lable" column="lable"></result>
+        <result property="value" column="value"></result>
+        <result property="type" column="type"></result>
+    </resultMap>
+    <select id="selectDictDataByType"  resultMap="Kaikuotype">
+            SELECT * FROM `kaikuotype`
+    </select>
+    <select id="selectlable" resultMap="Kaikuotype">
+        SELECT * FROM `kaikuotype` WHERE lable=#{lable}
+    </select>
+</mapper>

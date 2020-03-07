@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>管理员表单管理</title>
+</head>
+
+<style>
+    .listname {
+        border:none;
+    }
+    textarea{
+        height: 20px;
+    }
+</style>
+
+<body>
+<h1>管理员表单管理</h1>
+<label align="top">表单名称</label>
+<textarea id="t1"></textarea>
+必填或非填<select name="kaikuo_election" id="kaikuo_election" >
+
+    <option th:each="election : ${type}" th:if="${election.type} eq 'kaikuo_election' " th:text="${election.lable}" th:value="${election.lable}"></option>
+</select>
+拥有表单验证的表单<select name="type_from" id="type_from">
+    <option>请选择</option>
+    <option  th:each="election : ${type}" th:if="${election.type} eq 'type_from' " th:text="${election.lable}" th:value="${election.lable}" onchange="changeSelect(this)"></option>
+</select>
+input文本格式
+<select name="type_from" id="type_input">
+    <option>请选择</option>
+    <option  th:each="election : ${type}" th:if="${election.type} eq 'type_input' " th:text="${election.lable}" th:value="${election.lable}" onchange="changeSelect(this)"></option>
+</select>
+<br><br><br>
+<div class="btn">
+    <button>添加表单列表</button>
+</div>
+<hr>
+<h1>新增表单名称</h1>
+表单名称&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp是否必填
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp选择格式
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp表单格式
+<form class="fromlist" action="addfrom" id="frm"  method="post">
+    <input type="submit" id="btn" value="提交" /><br>
+</form>
+<script th:inline="javascript">
+    var btn=document.querySelector("button"),//获得button元素
+        textArea=document.querySelector("textarea"),
+        fromlist=document.querySelector(".fromlist");
+     btn.onclick=function(){
+        kaikuo_election= document.getElementById("kaikuo_election");
+        type_from=document.getElementById("type_from");
+         type_input=document.getElementById("type_input");
+        if(textArea.value){
+            fromlist.innerHTML+="<input class='listname' name='listname' value="+textArea.value+" readonly >";//将数据添加到input里面
+            fromlist.innerHTML+="<input class='listname' name='kaikuoelection' id='' value="+kaikuo_election.value+" readonly >";
+            if (type_from.value=='请选择'){
+                fromlist.innerHTML+="<input class='listname' name='typefrom' id='' value='无' readonly >";
+            }else {
+                fromlist.innerHTML+="<input class='listname' name='typefrom' id='' value="+type_from.value+" readonly >";
+            }
+            fromlist.innerHTML+="<input class='listname' name='typeinput' id='' value="+type_input.value+" readonly ><br>";
+            textArea.value="";//清空输入框
+        }else{
+            alert("你尚未输入信息,请重新输入")
+        }
+    }
+    $("#btn").click(function () {
+        console.log(getFormJson(frm));
+        $.ajax({
+            url: "${pageContext.request.contextPath}/addfrom",
+            type:"POST",
+            data: getFormJson(frm).serialize(),
+            //xhrFields: {withCredentials: true},
+            crossDomain: true,
+            contentType:"application/json;charset=utf-8",
+            success:function(data){
+                console.log(data)
+            },
+            error:function(data){
+                console.log(data)
+            }
+        });
+    })
+
+    function getFormJson(frm) {   //frm:form表单的id
+        var o = {};
+        var a = $("#"+frm).serializeArray();
+        $.each(a, function() {
+            if (o[this.name] !== undefined) {
+                if (!o[this.name].push) {
+                    o[this.name] = [ o[this.name] ];
+                }
+                o[this.name].push(this.value || '');
+            } else {
+                o[this.name] = this.value || '';
+            }
+        });
+        return o;
+    }
+
+    function changeSelect(obj) {
+        var _this = obj;
+        $("#t1").val($(_this).val());
+        _this.options[0].selected = true;
+    }
+
+
+</script>
+</body>
+</html>
